@@ -1,0 +1,30 @@
+* Chez-mpg123
+
+** About
+This project provides bindings to the mpg123 library for Chez Scheme. It is currently a work in progress.
+
+** Function Status
+*** Complete
+- [X] Library and handle setup 
+- [X] Error Handling
+- [X] Decoder Selection
+- [X] Output Audio Format
+- [X] File Input and Decoding
+- [ ] Position and Seeking
+- [ ] Volume and Equalizer
+- [ ] Status and Information
+- [ ] Metadata Handling
+- [ ] Advanced Parameter API
+- [X] Low Level I/O
+
+** Differences from C API
+Overall the biggest change is in the naming: the ~mpg123~ prefix has been removed and complete words are favored. ~mpg123_init~ becomes ~initialize~ (with R6RS prefixes it's trivial to make it ~mpg123:initialize~). Additionally, snake case is being used for multi-word names. Lastly, because of the removed prefix, generic name's like ~open~, ~read~, and ~write~, were given more specific names, ~open-stream~, ~read-stream~, and ~write-stream~ respectively
+
+Some functions have API's which aren't super friendly to the "Scheme way", and would have required consumers of the library to manually allocate and reference memory. Functions with different API's are outlined here.
+
+*** ~get-format~
+Get format has been turned into a continuation-passing-style (CPS) function:
+
+~(mpg123:get-format handle (lambda (rate channels encoding) ... ))~
+
+with ~rate~ ~channels~ and ~encoding~ then made available inside the lambda.
